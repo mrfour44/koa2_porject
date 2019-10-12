@@ -6,6 +6,13 @@ class InitManager {
     // 入口方法
     InitManager.app = app
     InitManager.initLoadRouters();
+    InitManager.loadHttpException();
+    InitManager.loadConfig();
+  }
+  static loadConfig(path = '') {
+    const configPath = path || process.cwd() + '/config/config.js';
+    const config = require(configPath);
+    global.config = config;
   }
   static initLoadRouters() {
     // 自动加载路由模块 process.cwd() 项目地址
@@ -20,6 +27,11 @@ class InitManager {
         InitManager.app.use(obj.routes());
       }
     }
+  }
+  // 把全部错误类都挂在在全局变量中 解决经常导入require的问题
+  static loadHttpException() {
+    const errors = require('./http-exception')
+    global.errs = errors
   }
 }
 

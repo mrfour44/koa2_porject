@@ -234,7 +234,7 @@ class RuleField {
         }
         return new RuleFieldResult(true, '', this._convert(field))
     }
-
+    // 可以在这里扩展需要转换的类型。
     _convert(value) {
         for (let rule of this.rules) {
             if (rule.name == 'isInt') {
