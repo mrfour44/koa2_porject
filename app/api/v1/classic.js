@@ -4,6 +4,12 @@ const { HttpException, ParameterException } =  require('../../../core/http-excep
 const { PositiveIntegerValidator } = require('../../validators/validator')
 
 router.post('/v1/:id/classic/latest', async(ctx, next) => {
+  // User 用户系统
+  // 2部分 通用型 针对小程序
+  // 账号 密码 附属信息：昵称 email 手机
+  // 注册 登录
+
+
   // param - 地址参数
   // header - 请求头
   // query - 查询参数
