@@ -13,7 +13,12 @@ const LoginType = {
   ADMIN_EMAIL: 200,
   isThisType
 }
-
+const ApiType = {
+  USER: 1,
+  ADMIN: 10,
+  SUPER_ADMIN: 20
+}
 module.exports = {
-  LoginType
+  LoginType,
+  ApiType
 }
