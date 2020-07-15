@@ -1,6 +1,6 @@
 const { sequelize } = require("../../core/db");
-const { Sequelize, Model } = require("sequelize");
-const { Art } = require("@models/art");
+const { Sequelize, Model, Op } = require("sequelize");
+const { Art } = require("./art");
 class Favor extends Model {
   // 业务表
   // 点赞功能
@@ -53,6 +53,21 @@ class Favor extends Model {
       },
     });
     return favor ? true : false;
+  }
+  static async getMyClassicFavors(uid) {
+    const arts = await Favor.findAll({
+      where: {
+        uid,
+        type: {
+          // type 剔除 400
+          [Op.not]: 400,
+        },
+      },
+    });
+    if (!arts) {
+      throw new global.errs.NotFound();
+    }
+    return await Art.getList(arts);
   }
 }
 Favor.init(

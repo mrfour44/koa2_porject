@@ -1,6 +1,6 @@
 const { LinValidator, Rule } = require("../../core/lin-validator-v2");
 const { User } = require("../models/user");
-const { LoginType } = require("../lib/enum");
+const { LoginType, ArtType } = require("../lib/enum");
 class PositiveIntegerValidator extends LinValidator {
   constructor() {
     super();
@@ -78,11 +78,42 @@ class TokenValidator extends LinValidator {
   }
 }
 function checkType(vals) {
-  if (!vals.body.type) {
+  let type = vals.body.type || vals.path.type;
+  if (!type) {
     throw new Error("type是必须参数");
   }
-  if (!LoginType.isThisType(vals.body.type)) {
+  // 参数转型 可以保存在 parsed里面。也可以保存在parsed.default
+  type = parseInt(type);
+  if (!LoginType.isThisType(type)) {
     throw new Error("type参数不合法");
+  }
+}
+function checkArtType(vals) {
+  let type = vals.body.type || vals.path.type;
+  if (!type) {
+    throw new Error("type是必须参数");
+  }
+  // 参数转型 可以保存在 parsed里面。也可以保存在parsed.default
+  type = parseInt(type);
+  if (!ArtType.isThisType(type)) {
+    throw new Error("type参数不合法");
+  }
+}
+// 用类来封装checkType LoginType ArtType
+class Checker {
+  constructor(type) {
+    this.enumType = type;
+  }
+  check(vals) {
+    let type = vals.body.type || vals.path.type;
+    if (!type) {
+      throw new Error("type是必须参数");
+    }
+    // 参数转型 可以保存在 parsed里面。也可以保存在parsed.default
+    type = parseInt(type);
+    if (!this.enumType.isThisType(type)) {
+      throw new Error("type参数不合法");
+    }
   }
 }
 class NotEmptyValidator extends LinValidator {
@@ -94,13 +125,18 @@ class NotEmptyValidator extends LinValidator {
 class LikeValidator extends PositiveIntegerValidator {
   constructor() {
     super();
-    this.validateType = checkType;
+    this.validateType = checkArtType;
+    // const checker = new Checker(ArtType);
+    // 修改this的指向 - 会导致 没有了linValidator 的能力
+    // this.validateType = checker.check.bind(checker);
   }
 }
+class ClassicValidator extends LikeValidator {}
 module.exports = {
   PositiveIntegerValidator,
   RegisterValidator,
   TokenValidator,
   NotEmptyValidator,
   LikeValidator,
+  ClassicValidator,
 };
