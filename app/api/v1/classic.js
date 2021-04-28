@@ -9,7 +9,7 @@ const { ApiType } = require("../../lib/enum");
 const router = new Router({
   prefix: "/v1/classic",
 });
-router.get("/latest", new Auth(ApiType.USER).m, async (ctx, next) => {
+router.get("/latest", new Auth(ApiType.USER).m, async (ctx) => {
   // User 用户系统
   // 2部分 通用型 针对小程序
   // 账号 密码 附属信息：昵称 email 手机
